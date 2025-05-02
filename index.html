@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QCM Karoui Wahbi 2024-2025</title>
+    <style>
+      body {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f9ff;
+        color: #333;
+      }
+
+      h1 {
+        color: #ff6b6b;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px dotted #4ecdc4;
+        padding-bottom: 10px;
+      }
+
+      .question-page {
+        display: none;
+        background-color: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid #ffd166;
+      }
+
+      .active-page {
+        display: block;
+      }
+
+      .question {
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #2b2d42;
+        font-size: 1.3em;
+        background-color: #f7fff7;
+        padding: 10px;
+        border-radius: 10px;
+        border-left: 5px solid #4ecdc4;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #f7f7f7;
+        border: 2px solid #e0e0e0;
+        position: relative;
+        padding-left: 50px;
+      }
+
+      .option:hover {
+        background-color: #e3f2fd;
+        border-color: #bbdefb;
+        transform: scale(1.02);
+      }
+
+      .option input {
+        margin-right: 15px;
+        transform: scale(1.3);
+        position: absolute;
+        left: 15px;
+      }
+
+      .option::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+      }
+
+      .option:nth-child(1)::before {
+        content: 'A';
+        background-color: #4285F4; /* Bleu */
+      }
+
+      .option:nth-child(2)::before {
+        content: 'B';
+        background-color: #EA4335; /* Rouge */
+      }
+
+      .option:nth-child(3)::before {
+        content: 'C';
+        background-color: #FBBC05; /* Jaune */
+      }
+
+      .option-text::before {
+        content: 'A. ';
+        font-weight: bold;
+        color: #4285F4;
+      }
+      .option:nth-child(2) .option-text::before {
+        content: 'B. ';
+        color: #EA4335;
+      }
+      .option:nth-child(3) .option-text::before {
+        content: 'C. ';
+        color: #FBBC05;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+      }
+
+      button {
+        background-color: #4ecdc4;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+        font-weight: bold;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        background-color: #ff6b6b;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      #results {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 15px;
+        display: none;
+        background-color: #f7fff7;
+        border: 2px dashed #4ecdc4;
+      }
+
+      .progress {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #ff6b6b;
+        font-size: 1.2em;
+      }
+
+      .wrong-answers {
+        margin-top: 20px;
+        text-align: left;
+        padding: 15px;
+        background-color: #fff5f5;
+        border-radius: 10px;
+        border-left: 5px solid #ff6b6b;
+      }
+
+      .wrong-question {
+        margin-bottom: 10px;
+        color: #d32f2f;
+      }
+
+      .correct-answer {
+        color: #388e3c;
+        font-weight: bold;
+      }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: #f00;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      footer{
+        
+        position: fixed;
+        bottom: 0;
+        left: 40%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎯 Questions pour des champions</h1>
+
+    <div class="progress">Question <span id="current-q">1</span>/7 ✨</div>
+
+    <div id="quiz-container">
+      <!-- Question 1 -->
+      <div class="question-page active-page" id="page1">
+        <div class="question">
+          1. Un sous-programme est :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q1" value="a" /><span class="option-text"> Un ensemble d'instructions identifiées par un nom pour réaliser une tache bien spécifique</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q1" value="b" /><span class="option-text"> Utilisable qu'une seule fois</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q1" value="c" /><span class="option-text"> N'est appelé que par un programme principal</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button disabled>⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question-page" id="page2">
+        <div class="question">
+          2. La différence entre une fonction et une procédure :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q2" value="a" /><span class="option-text"> Une fonction retourne une seule valeur de type simple, une procédure modifie le contenu d'une variable</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q2" value="b" /><span class="option-text"> La fonction et la procédure permettent un passage par référence.</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q2" value="c" /><span class="option-text"> la fonction permet un passage de paramètre par référence tandis que la procédure permet un passage de paramètre par valeur uniquement.</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question-page" id="page3">
+        <div class="question">3. Le "paramètre formel" désigne :</div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q3" value="a" /><span class="option-text"> Les variables utilisées lors de l'appel d'un module</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q3" value="b" /><span class="option-text"> Les variables déclarées dans l'en-tête d'un module</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q3" value="c" /><span class="option-text"> Les variables déclarées au niveau du programme principal</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="question-page" id="page4">
+        <div class="question">
+          4. L'avantage de l'utilisation des sous-programmes est de/d' :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q4" value="a" /><span class="option-text"> Réduire la lisibilité du programme en créant trop de modules</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q4" value="b" /><span class="option-text"> Rendre le programme plus difficile à comprendre</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q4" value="c" /><span class="option-text"> Éviter la redondance des instructions et faciliter la mise à jour.</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question-page" id="page5">
+        <div class="question">
+          5. Une variable locale est :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q5" value="a" /><span class="option-text"> Une variable reconnue tout le long d'un programme</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q5" value="b" /><span class="option-text"> Une variable déclarée et utilisée dans un module</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q5" value="c" /><span class="option-text"> Un paramètre déclaré au niveau de la définition de l'entête d'un module</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="question-page" id="page6">
+        <div class="question">
+          6. Un mot-clé utilisé pour retourner une valeur dans une fonction :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q6" value="a" /><span class="option-text"> écrire</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q6" value="b" /><span class="option-text"> retourner</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q6" value="c" /><span class="option-text"> répéter</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button class="next-btn">Suivant ⏭</button>
+        </div>
+      </div>
+
+      <!-- Question 7 -->
+      <div class="question-page" id="page7">
+        <div class="question">
+          7. Un sous-programme peut appeler un autre sous-programme :
+        </div>
+        <div class="options">
+          <label class="option"
+            ><input type="radio" name="q7" value="a" /><span class="option-text"> vrai</span></label
+          >
+          <label class="option"
+            ><input type="radio" name="q7" value="b" /><span class="option-text"> faux</span></label
+          >
+        </div>
+        <div class="navigation">
+          <button class="prev-btn">⏮ Précédent</button>
+          <button id="submit-btn">🎯 Voir mon résultat !</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswers = {
+          q1: "a",
+          q2: "a",
+          q3: "b",
+          q4: "c",
+          q5: "b",
+          q6: "b",
+          q7: "a"
+        };
+
+        const answerTexts = {
+          q1: {
+            a: "Un ensemble d'instructions identifiées par un nom pour réaliser une tache bien spécifique",
+            b: "Utilisable qu'une seule fois",
+            c: "N'est appelé que par un programme principal",
+          },
+          q2: {
+            a: "Une fonction retourne une seule valeur de type simple, une procédure modifie le contenu d'une variable",
+            b: "La fonction et la procédure permettent un passage par référence.",
+            c: "la fonction permet un passage de paramètre par référence tandis que la procédure permet un passage de paramètre par valeur uniquement.",
+          },
+          q3: {
+            a: "Les variables utilisées lors de l'appel d'un module",
+            b: "Les variables déclarées dans l'en-tête d'un module",
+            c: "Les variables déclarées au niveau du programme principal",
+          },
+          q4: {
+            a: "Réduire la lisibilité du programme en créant trop de modules",
+            b: "Rendre le programme plus difficile à comprendre",
+            c: "Éviter la redondance des instructions et faciliter la mise à jour.",
+          },
+          q5: {
+            a: "Une variable reconnue tout le long d'un programme",
+            b: "Une variable déclarée et utilisée dans un module",
+            c: "Un paramètre déclaré au niveau de la définition de l'entête d'un module",
+          },
+          q6: {
+            a: "écrire",
+            b: "retourner",
+            c: "répéter",
+          },
+          q7: {
+            a: "vrai",
+            b: "faux",
+          }
+        };
+
+        const totalQuestions = 7;
+        let currentPage = 1;
+        const currentQSpan = document.getElementById("current-q");
+
+        // Navigation entre les questions
+        document.querySelectorAll(".next-btn").forEach((btn) => {
+          btn.addEventListener("click", nextPage);
+        });
+
+        document.querySelectorAll(".prev-btn").forEach((btn) => {
+          btn.addEventListener("click", prevPage);
+        });
+
+        document
+          .getElementById("submit-btn")
+          .addEventListener("click", showResults);
+
+        function nextPage() {
+          if (currentPage < totalQuestions) {
+            document
+              .getElementById(`page${currentPage}`)
+              .classList.remove("active-page");
+            currentPage++;
+            document
+              .getElementById(`page${currentPage}`)
+              .classList.add("active-page");
+            currentQSpan.textContent = currentPage;
+          }
+        }
+
+        function prevPage() {
+          if (currentPage > 1) {
+            document
+              .getElementById(`page${currentPage}`)
+              .classList.remove("active-page");
+            currentPage--;
+            document
+              .getElementById(`page${currentPage}`)
+              .classList.add("active-page");
+            currentQSpan.textContent = currentPage;
+          }
+        }
+
+        function createConfetti() {
+          for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement("div");
+            confetti.classList.add("confetti");
+            confetti.style.left = Math.random() * window.innerWidth + "px";
+            confetti.style.top = -10 + "px";
+            confetti.style.backgroundColor = `hsl(${
+              Math.random() * 360
+            }, 100%, 50%)`;
+            confetti.style.width = Math.random() * 10 + 5 + "px";
+            confetti.style.height = Math.random() * 10 + 5 + "px";
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+              confetti.style.top = window.innerHeight + "px";
+              confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+              confetti.style.opacity = "0";
+
+              setTimeout(() => {
+                confetti.remove();
+              }, 2000);
+            }, 10);
+          }
+        }
+
+        function showResults() {
+          let score = 0;
+          let allAnswered = true;
+          let wrongQuestions = [];
+
+          // Vérifier chaque question
+          for (let i = 1; i <= totalQuestions; i++) {
+            const questionName = "q" + i;
+            const selectedOption = document.querySelector(
+              `input[name="${questionName}"]:checked`
+            );
+
+            if (!selectedOption) {
+              allAnswered = false;
+              break;
+            } else if (selectedOption.value === correctAnswers[questionName]) {
+              score++;
+            } else {
+              wrongQuestions.push({
+                number: i,
+                correct:
+                  answerTexts[questionName][correctAnswers[questionName]],
+              });
+            }
+          }
+
+          if (!allAnswered) {
+            alert(
+              "Oh non ! 🧙‍♂️ Tu as oublié de répondre à certaines questions !"
+            );
+            return;
+          }
+
+          // Afficher les résultats
+          const percentage = Math.round((score / totalQuestions) * 100);
+          let message = `<h2>✨ Ton score  : ${score}/${totalQuestions} (${percentage}%) ✨</h2><br>`;
+
+          if (score === totalQuestions) {
+            message +=
+              "🎉 Waouh ! Tu es un vrai magicien des sous-programmes ! 🧙‍♂️";
+            createConfetti();
+          } else if (score >= 5) {
+            message +=
+              "👍 Bien joué ! Tu connais bien les sous-programmes, mais tu peux encore t'améliorer !";
+          } else {
+            message +=
+              "📚 Pas de panique ! Relis bien le cours sur les sous-programmes et réessaie !";
+          }
+
+          // Afficher les questions erronées
+          if (wrongQuestions.length > 0) {
+            message += `<div class="wrong-answers"><h3>Questions à revoir :</h3>`;
+            wrongQuestions.forEach((item) => {
+              message += `<div class="wrong-question">
+                            <strong>Question ${item.number} :</strong> La bonne réponse était 
+                            <span class="correct-answer">"${item.correct}"</span>
+                        </div>`;
+            });
+            message += `</div>`;
+          }
+
+          document.getElementById("results").innerHTML = message;
+          document.getElementById("results").style.display = "block";
+
+          // Masquer le QCM et afficher seulement les résultats
+          document.getElementById("quiz-container").style.display = "none";
+          document.querySelector("h1").textContent =
+            "🎩 Résultats des Questions pour des champions";
+          document.querySelector(".progress").style.display = "none";
+
+          // Faire défiler jusqu'aux résultats
+          document
+            .getElementById("results")
+            .scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    </script>
+    <footer>&copy KAROUI Wahbi 2024-2025</footer>
+  </body>
+</html>
